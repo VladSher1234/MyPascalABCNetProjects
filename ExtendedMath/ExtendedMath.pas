@@ -1,4 +1,5 @@
 ﻿unit ExtendedMath;
+
 uses School;
 
 // Условные обозначения:
@@ -28,6 +29,10 @@ type
     begin
       if d = 0 then
         raise new System.Exception('Знаменатель дроби не может быть равен 0');
+      if (d < 0) then begin
+        n *= -1;
+        d *= -1;
+      end;
       var nod := School.НОД(n, d);
       num := n div nod;
       denom := d div nod;
@@ -42,49 +47,43 @@ type
     
     static function operator+(f, f1: Fraction): Fraction;
     begin
-      var nok:= School.НОК(f.denom, f1.denom);
-      Result := Fraction.Create(f.num * (nok div f1.denom) + f1.num * (nok div f.denom), nok)
+      var nok := School.НОК(f.denom, f1.denom);
+      Result := new Fraction(f.num * (nok div f1.denom) + f1.num * (nok div f.denom), nok)
     end;
     
     static function operator-(f, f1: Fraction): Fraction;
     begin
-      var nok:= School.НОК(f.denom, f1.denom);
-      Result := Fraction.Create(f.num * (nok div f1.denom) - f1.num * (nok div f.denom), nok)
-    end;  
-
-    static function operator*(f, f1: Fraction): Fraction := Fraction.Create(f.num * f1.num, f.denom * f1.denom);
-
-    static function operator*(f: Fraction; i: integer): Fraction := Fraction.Create(f.num * i, f.denom);
+      var nok := School.НОК(f.denom, f1.denom);
+      Result := new Fraction(f.num * (nok div f1.denom) - f1.num * (nok div f.denom), nok)
+    end;
     
-    static function operator/(f, f1: Fraction): Fraction := Fraction.Create(f.num * f1.denom, f.denom * f1.num);
-
-    static function operator/(f: Fraction; i: integer): Fraction := Fraction.Create(f.num, f.denom * i);
+    static function operator*(f, f1: Fraction): Fraction := new Fraction(f.num * f1.num, f.denom * f1.denom);
+    
+    static function operator*(f: Fraction; i: integer): Fraction := new Fraction(f.num * i, f.denom);
+    
+    static function operator/(f, f1: Fraction): Fraction := new Fraction(f.num * f1.denom, f.denom * f1.num);
+    
+    static function operator/(f: Fraction; i: integer): Fraction := new Fraction(f.num, f.denom * i);
     
     static function operator implicit(f: Fraction): real := f.num / f.denom;
     
-    static function operator=(f, f1: Fraction): boolean := f.num = f1.num and f.denom = f1.denom;
+    static function operator=(f, f1: Fraction): boolean := (f.num = f1.num) and (f.denom = f1.denom);
+
+    static function operator>(f, f1: Fraction): boolean;
+    begin
+      var nok := School.НОК(f.denom, f1.denom);
+      Result := (f.num * (nok / f.denom) > f1.num * (nok / f1.denom))
+    end;
+    
+    static function operator<(f, f1: Fraction): boolean;
+    begin
+      var nok := School.НОК(f.denom, f1.denom);
+      Result := (f.num * (nok / f.denom) < f1.num * (nok / f1.denom))
+    end;
+    
+    static function operator<>(f, f1: Fraction): boolean := not (f = f1);
     
   end;
-
-/// Возвращает максимальную дробь из f и f1
-function MaxFraction(f, f1: Fraction): Fraction;
-begin
-  if f.denom = f1.denom then 
-    if f.num > f1.num then
-      Result := f
-    else
-      Result := f1
-  else begin
-    var ftemp := f;
-    var f1temp := f1;
-    (f.num, f1.num) := (f.num * f1.denom, f1.num * f.denom);
-    (f.denom, f1.denom) := (f.denom * f1.denom, f1.denom * f.denom);
-    if f.num > f1.num then
-      Result := ftemp
-    else
-      Result := f1temp
-  end;
-end;
 
 //    ||Смешанные числа||
 
@@ -93,145 +92,47 @@ type
   MixNumber = record
     /// Целая часть
     mix: integer;
-    /// Числитель
-    num: integer;
-    /// Знаменатель
-    denom: integer;
-    constructor(m: integer; n, d: integer);
+    /// Дробная часть
+    frac: Fraction;
+    constructor(m: integer; f: Fraction);
     begin
-      mix := m;
-      if d = 0 then
-        raise new System.Exception('Знаменатель дроби не может быть равен 0');
-      var nod := School.НОД(n, d);
-      num := n div nod;
-      denom := d div nod;
+      if (f.num < 0) then begin
+        m *= -1;
+        f.num *= -1;
+      end;
+      mix := m + f.num div f.denom;
+      frac := new Fraction(f.num mod f.denom, f.denom)
     end;
     /// Выводит смешанное число
-    procedure Print;
+    procedure PrintM;
     begin
-      if num = 0 then
-        println(mix)
-      else
-      if mix = 0 then
-        println(num, '/', denom)
-      else
-        println(mix, num + '/' + denom)
+      if mix <> 0 then
+        print(mix);
+      frac.Print
     end;
-  end;
+    
+    /// Возвращает значение, равное смешанному числу, переведенное в обыкновенную дробь
+    function ToFraction: Fraction := new Fraction(mix * frac.denom + frac.num, frac.denom);
+    
+    static function operator+(m, m1: MixNumber): MixNumber:= new MixNumber(0, m.ToFraction + m1.ToFraction); 
 
+    static function operator-(m, m1: MixNumber): MixNumber:= new MixNumber(0, m.ToFraction - m1.ToFraction); 
 
-/// Возвращает значение, равное смешанному числу переведенной в десятичное
-function MixNumToDecimal(m: MixNumber): real := m.mix + m.num / m.denom;
-/// Возвращает значение, равное дроби, переведенное в смешанное число
-function FracToMixNum(f: Fraction): MixNumber;
-begin
-  var m := new MixNumber(round(f.num) div round(f.denom), round(f.num) mod round(f.denom), f.denom);
-  Result := m
-end;
-/// Возвращает значение, равное смешанному числу, переведенное в обыкновенную дробь
-function MixNumToFrac(m: MixNumber): Fraction;
-begin
-  var f := new Fraction(m.mix * m.denom + m.num, m.denom);
-  Result := f
-end;
-/// Возвращает значение, равное сокращенному смешанному числу. Если смешанное число не сокращаемо, возвращается изначальное смешанное число.
-function ReduceMixNumber(m: MixNumber): MixNumber;
-begin
-  var i := 1;
-  var max: real;
-  if m.num > m.denom then
-    max := m.num
-  else
-    max := m.denom;
-  loop round(max) do
-  begin
-    i += 1;
-    if (round(m.num) mod i = 0) and (round(m.denom) mod i = 0) then begin
-      m.num := m.num div i;
-      m.denom := m.denom div i;
-      i := 1
-    end
+    static function operator*(m, m1: MixNumber): MixNumber:= new MixNumber(0, m.ToFraction * m1.ToFraction); 
+    
+    static function operator/(m, m1: MixNumber): MixNumber:= new MixNumber(0, m.ToFraction / m1.ToFraction); 
+    
+    static function operator implicit(m: MixNumber): real := m.mix + real(m.frac);
+    
+    static function operator=(m, m1: MixNumber): boolean := m.ToFraction = m1.ToFraction;
+    
+    static function operator>(m, m1: MixNumber): boolean := m.ToFraction > m1.ToFraction;
+    
+    static function operator<(m, m1: MixNumber): boolean := m.ToFraction < m1.ToFraction;
+    
+    static function operator<>(m, m1: MixNumber): boolean := not (m = m1);
+
   end;
-  m.mix := m.mix;
-  Result := m
-end;
-/// Возвращает значение, равное сложению двух смешанных чисел
-function AddMixNumber(m, m1: MixNumber): MixNumber;
-begin
-  var resf: MixNumber;
-  if m.denom = m1.denom then begin
-    resf.mix := m.mix + m1.mix;
-    resf.denom := m.denom;
-    resf.num := m.num + m1.num;
-    var resm := MixNumToFrac(resf);
-    Result := FracToMixNum(resm);
-  end
-  else begin
-    resf.mix := m.mix + m1.mix;
-    (m.num, m1.num) := (m.num * m1.denom, m1.num * m.denom);
-    (m.denom, m1.denom) := (m.denom * m1.denom, m1.denom * m.denom);
-    resf.num := m.num + m1.num;
-    resf.denom := m.denom;
-    var resm := MixNumToFrac(resf);
-    Result := FracToMixNum(resm);
-  end;
-end;
-/// Возвращает значение, равное вычитанию двух смешанных чисел
-function SubstractMixNumber(m, m1: MixNumber): MixNumber;
-begin
-  var resf: MixNumber;
-  if m.denom = m1.denom then begin
-    resf.mix := m.mix - m1.mix;
-    resf.denom := m.denom;
-    resf.num := m.num - m1.num;
-    var resm := MixNumToFrac(resf);
-    Result := FracToMixNum(resm);
-  end
-  else begin
-    resf.mix := m.mix - m1.mix;
-    (m.num, m1.num) := (m.num * m1.denom, m1.num * m.denom);
-    (m.denom, m1.denom) := (m.denom * m1.denom, m1.denom * m.denom);
-    resf.num := m.num - m1.num;
-    resf.denom := m.denom;
-    var resm := MixNumToFrac(resf);
-    Result := FracToMixNum(resm);
-  end;
-end;
-/// Возвращает значение, равное умножению двух смешанных чисел
-function MultipleMixNumber(m, m1: MixNumber): MixNumber;
-begin
-  var (f, f1) := (MixNumToFrac(m), MixNumToFrac(m1));
-  var resf := new Fraction(f.num * f1.num, f.denom * f1.denom);
-  Result := FracToMixNum(resf)
-end;
-/// Возвращает значение, равное делению двух смешанных чисел
-function DivideMixNumber(m, m1: MixNumber): MixNumber;
-begin
-  var (f, f1) := (MixNumToFrac(m), MixNumToFrac(m1));
-  var resf := new Fraction(f.num * f1.denom, f.denom * f1.num);
-  Result := FracToMixNum(resf)
-end;
-/// Возвращает максимальное смешанное число из m и m1
-function MaxMixNumber(m, m1: MixNumber): MixNumber;
-begin
-  var f := MixNumToFrac(m);
-  var f1 := MixNumToFrac(m1);
-  if f.denom = f1.denom then 
-    if f.num > f1.num then
-      Result := FracToMixNum(f)
-    else
-      Result := FracToMixNum(f1)
-  else begin
-    var ftemp := f;
-    var f1temp := f1;
-    (f.num, f1.num) := (f.num * f1.denom, f1.num * f.denom);
-    (f.denom, f1.denom) := (f.denom * f1.denom, f1.denom * f.denom);
-    if f.num > f1.num then
-      Result := FracToMixNum(ftemp)
-    else
-      Result := FracToMixNum(f1temp)
-  end;
-end;
 
 //----------------------------------------------------------------------------
 //          Константы
