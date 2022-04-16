@@ -35,90 +35,37 @@ type
     /// Выводит дробь
     procedure Print;
     begin
-      writeln(num, '/', denom);
+      write(num);
+      if (denom <> 1) then
+        writeln('/', denom);
     end;
     
     static function operator+(f, f1: Fraction): Fraction;
     begin
-      var resf: Fraction;
-      if f.denom = f1.denom then begin
-        resf.denom := f.denom;
-        resf.num := f.num + f1.num;
-        Result := resf
-      end
-      else begin
-        (f.num, f1.num) := (f.num * f1.denom, f1.num * f.denom);
-        (f.denom, f1.denom) := (f.denom * f1.denom, f1.denom * f.denom);
-        resf.num := f.num + f1.num;
-        resf.denom := f.denom;
-        Result := resf
-      end;
+      var nok:= School.НОК(f.denom, f1.denom);
+      Result := Fraction.Create(f.num * (nok div f1.denom) + f1.num * (nok div f.denom), nok)
     end;
     
     static function operator-(f, f1: Fraction): Fraction;
     begin
-      var resf: Fraction;
-      if f.denom = f1.denom then begin
-        resf.denom := f.denom;
-        resf.num := f.num - f1.num;
-        Result := resf
-      end
-      else begin
-        (f.num, f1.num) := (f.num * f1.denom, f1.num * f.denom);
-        (f.denom, f1.denom) := (f.denom * f1.denom, f1.denom * f.denom);
-        resf.num := f.num - f1.num;
-        resf.denom := f.denom;
-        Result := resf
-      end;
-    end;
+      var nok:= School.НОК(f.denom, f1.denom);
+      Result := Fraction.Create(f.num * (nok div f1.denom) - f1.num * (nok div f.denom), nok)
+    end;  
+
+    static function operator*(f, f1: Fraction): Fraction := Fraction.Create(f.num * f1.num, f.denom * f1.denom);
+
+    static function operator*(f: Fraction; i: integer): Fraction := Fraction.Create(f.num * i, f.denom);
     
-    static function operator/(f, f1: Fraction): Fraction;
-    begin
-      var resf: Fraction;
-      resf.num := f.num * f1.denom;
-      resf.denom := f.denom * f1.num;
-      Result := resf
-    end;    
+    static function operator/(f, f1: Fraction): Fraction := Fraction.Create(f.num * f1.denom, f.denom * f1.num);
 
-    static function operator/(f: Fraction; i: integer): Fraction;
-    begin
-      Result := Fraction.Create(f.num, f.denom * i);
-    end;    
-  
+    static function operator/(f: Fraction; i: integer): Fraction := Fraction.Create(f.num, f.denom * i);
+    
+    static function operator implicit(f: Fraction): real := f.num / f.denom;
+    
+    static function operator=(f, f1: Fraction): boolean := f.num = f1.num and f.denom = f1.denom;
+    
   end;
 
-/// Возвращает значение, равное сложению двух дробей
-function AddFraction(f, f1: Fraction): Fraction;
-begin
-  Result := f + f1;
-end;
-/// Возвращает значение, равное вычитанию двух дробей
-function SubstractFraction(f, f1: Fraction): Fraction;
-begin
-  Result := f - f1;
-end;
-/// Возвращает значение, равное делению двух дробей
-function DivideFraction(f, f1: Fraction): Fraction;
-begin
-  Result := f / f1;
-end;
-/// Возвращает значение, равное сокращенной дроби. Если дробь не сокращаема, возвращается изначальная дробь
-function ReduceFraction(f: Fraction): Fraction;
-begin
-  var i := 1;
-  var max := max(f.num, f.denom);
-  loop round(max) do
-  begin
-    i += 1;
-    if (round(f.num) mod i = 0) and (round(f.denom) mod i = 0) then begin
-      f := f / i;
-      i := 1
-    end
-  end;
-  Result := f
-end;
-/// Возвращает значение, равное обыкновенной дроби переведенной в десятичную
-function FracToDecimal(f: Fraction): real := f.num / f.denom;
 /// Возвращает максимальную дробь из f и f1
 function MaxFraction(f, f1: Fraction): Fraction;
 begin
@@ -153,8 +100,11 @@ type
     constructor(m: integer; n, d: integer);
     begin
       mix := m;
-      num := n;
-      denom := d;
+      if d = 0 then
+        raise new System.Exception('Знаменатель дроби не может быть равен 0');
+      var nod := School.НОД(n, d);
+      num := n div nod;
+      denom := d div nod;
     end;
     /// Выводит смешанное число
     procedure Print;
