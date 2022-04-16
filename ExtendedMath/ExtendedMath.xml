@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>ExtendedMath</name>
+  </assembly>
+  <members>
+    <member name="T:ExtendedMath.Fraction">
+      <summary> Тип обыкновенных дробей
+</summary>
+    </member>
+    <member name="M:ExtendedMath.Fraction.Print">
+      <summary> Выводит дробь
+</summary>
+    </member>
+    <member name="F:ExtendedMath.Fraction.num">
+      <summary> Числитель
+</summary>
+    </member>
+    <member name="F:ExtendedMath.Fraction.denom">
+      <summary> Знаменатель
+</summary>
+    </member>
+    <member name="T:ExtendedMath.MixNumber">
+      <summary> Тип смешанных чисел
+</summary>
+    </member>
+    <member name="M:ExtendedMath.MixNumber.Print">
+      <summary> Выводит смешанное число
+</summary>
+    </member>
+    <member name="F:ExtendedMath.MixNumber.mix">
+      <summary> Целая часть
+</summary>
+    </member>
+    <member name="F:ExtendedMath.MixNumber.num">
+      <summary> Числитель
+</summary>
+    </member>
+    <member name="F:ExtendedMath.MixNumber.denom">
+      <summary> Знаменатель
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.AddFraction(ExtendedMath.Fraction,ExtendedMath.Fraction)">
+      <summary> Возвращает значение, равное сложению двух дробей
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SubstractFraction(ExtendedMath.Fraction,ExtendedMath.Fraction)">
+      <summary> Возвращает значение, равное вычитанию двух дробей
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.DivideFraction(ExtendedMath.Fraction,ExtendedMath.Fraction)">
+      <summary> Возвращает значение, равное делению двух дробей
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.ReduceFraction(ExtendedMath.Fraction)">
+      <summary> Возвращает значение, равное сокращенной дроби. Если дробь не сокращаема, возвращается изначальная дробь
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.FracToDecimal(ExtendedMath.Fraction)">
+      <summary> Возвращает значение, равное обыкновенной дроби переведенной в десятичную
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.MixNumToDecimal(ExtendedMath.MixNumber)">
+      <summary> Возвращает значение, равное смешанному числу переведенной в десятичное
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.FracToMixNum(ExtendedMath.Fraction)">
+      <summary> Возвращает значение, равное дроби, переведенное в смешанное число
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.MixNumToFrac(ExtendedMath.MixNumber)">
+      <summary> Возвращает значение, равное смешанному числу, переведенное в обыкновенную дробь
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.ReduceFraction(ExtendedMath.MixNumber)">
+      <summary> Возвращает значение, равное сокращенному смешанному числу. Если смешанное число не сокращаема, возвращается изначальное смешанное число.
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.AddMixNumber(ExtendedMath.MixNumber,ExtendedMath.MixNumber)">
+      <summary> Возвращает значение, равное сложению двух смешанных чисел
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SubstractMixNumber(ExtendedMath.MixNumber,ExtendedMath.MixNumber)">
+      <summary> Возвращает значение, равное вычитанию двух смешанных чисел
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.MultipleMixNumber(ExtendedMath.MixNumber,ExtendedMath.MixNumber)">
+      <summary> Возвращает значение, равное умножению двух смешанных чисел
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.DivideMixNumber(ExtendedMath.MixNumber,ExtendedMath.MixNumber)">
+      <summary> Возвращает значение, равное делению двух смешанных чисел
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.MaxFraction(ExtendedMath.Fraction,ExtendedMath.Fraction)">
+      <summary> Возвращает максимальную дробь из f и f1
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.MaxMixNumber(ExtendedMath.MixNumber,ExtendedMath.MixNumber)">
+      <summary> Возвращает максимальное смешанное число из m и m1
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.PowerOfTwo(System.Int32)">
+      <summary> Возвращает значение 2 в степени a
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.PowerOfTen(System.Int32)">
+      <summary> Возвращает значение 10 в степени a
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Add(System.Int32,System.Int32)">
+      <summary> Возвращает значение прибавления чисел a и b
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Substract(System.Int32,System.Int32)">
+      <summary> Возвращает значение убавления чисел a и b
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Multiple(System.Int32,System.Int32)">
+      <summary> Возвращает значение умножения чисел a и b
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Divide(System.Int32,System.Int32)">
+      <summary> Возвращает значение деления чисел a и b
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Square(System.Int32)">
+      <summary> Возвращает значение квадрата a
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Cube(System.Int32)">
+      <summary> Возвращает значение куба a
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.OneDivideByNumber(System.Int32)">
+      <summary> Возвращает значение деления чисел 1 на a
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.NPowerN(System.Int32)">
+      <summary> Возвращает значение, равное a в степени a
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Max3(System.Int32,System.Int32,System.Int32)">
+      <summary> Возвращает максимальное значение из a, b, c
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.IsPrime(System.Int32)">
+      <summary> Возвращает True, если число простое, иначе возвращает False
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.IsNegative(System.Int32)">
+      <summary> Возвращает True, если число отрицательное, иначе возвращает False
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Factorial(System.Int32)">
+      <summary> Возвращает значение факториала a
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Superfactorial(System.Int32)">
+      <summary> Возвращает значение суперфакториала a
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.ArithmeticMean(System.Int32,System.Int32)">
+      <summary> Возвращает значение среднего арифметического из a и b
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.ArithmeticMean3(System.Int32,System.Int32,System.Int32)">
+      <summary> Возвращает значение среднего арифметического из a, b и c
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.ArithmeticMean4(System.Int32,System.Int32,System.Int32,System.Int32)">
+      <summary> Возвращает значение среднего арифметического из a, b, c и d
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.AreaOfCircle(System.Double)">
+      <summary> Возвращает значение площади окружности
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.S(System.Double,System.Double)">
+      <summary> Возвращает значение пути, равному скорость множить на время
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.V(System.Double,System.Double)">
+      <summary> Возвращает значение скорости, равной пути делить на время
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.t(System.Double,System.Double)">
+      <summary> Возвращает значение времени, равно пути делить на скорость
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Circumference(System.Double)">
+      <summary> Возвращает значение, равное длине окружности
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.PerimeterOfRect(System.Double,System.Double)">
+      <summary> Возвращает значение, равное периметру прямоугольника
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.PerimeterOfSquare(System.Double)">
+      <summary> Возвращает значение, равное периметру прямоугольника
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.VolumeOfBall(System.Double)">
+      <summary> Возвращает значение, равное объему шара
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.BallAreaSurface(System.Double)">
+      <summary> Возвращает значение, равное площади поверхности шара
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.VolumeOfRectangularCuboid(System.Double,System.Double,System.Double)">
+      <summary> Возвращает значение, равное объему прямоуголного параллелепипеда
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SurfaceAreaOfRectangularCuboid(System.Double,System.Double,System.Double)">
+      <summary> Возвращает значение, равное площади поверхности прямоуголного параллелепипеда
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.PerimeterOfRectangularCuboid(System.Double,System.Double,System.Double)">
+      <summary> Возвращает значение, равное периметру поверхности прямоуголного параллелепипеда
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.VПрТеч(System.Double,System.Double)">
+      <summary> Возвращает значение, равное скорости против течения реки, зная скорость собственную и течения реки
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.VПоТеч(System.Double,System.Double)">
+      <summary> Возвращает значение, равное скорости по течения реки, зная скорость собственную и течения реки
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.VСобств(System.Double,System.Double)">
+      <summary> Возвращает значение, равное скорости собственной, зная скорость против и по течению реки
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.VТеч(System.Double,System.Double)">
+      <summary> Возвращает значение, равное скорости течения, зная скорость против и по течению реки
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.Iterate``1(``0,``0,``0,System.Func{``0,``0,``0,``0})">
+      <summary> Возвращает бесконечную рекуррентную последовательность элементов, задаваемую начальными элементами first, second и функцией next
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.&lt;yield_helper_error_checkerr&gt;Iterate``1(``0,``0,``0,System.Func{``0,``0,``0,``0})">
+      <summary> Возвращает бесконечную рекуррентную последовательность элементов, задаваемую начальными элементами first, second и функцией next
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SeqWhile``1(``0,``0,``0,System.Func{``0,``0,``0,``0},System.Func{``0,System.Boolean})">
+      <summary> Нужно пиздец
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfPlus1(System.Int32)">
+      <summary> Выводит простейшую последовательность 1, 2, 3, 4... до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfFibonacci(System.Int32)">
+      <summary> Выводит числа Фибонначи до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfLucas(System.Int32)">
+      <summary> Выводит числа Люка до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfTribonacci(System.Int32)">
+      <summary> Выводит числа трибоначчи до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfPower2(System.Int32)">
+      <summary> Выводит степени двойки до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfPower10(System.Int32)">
+      <summary> Выводит степени десятки до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfPrimes(System.Int32)">
+      <summary> Выводит простые числа n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfMersenne(System.Int32)">
+      <summary> Выводит числа Мерсенна до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfWoodall(System.Int32)">
+      <summary> Выводит числа Вудала до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfFermat(System.Int32)">
+      <summary> Выводит числа Ферма до n
+</summary>
+    </member>
+    <member name="M:ExtendedMath.ExtendedMath.SequenceOfNTimesN(System.Int32)">
+      <summary> Выводит последовательность n * n до n
+</summary>
+    </member>
+    <member name="F:ExtendedMath.ExtendedMath.Fi">
+      <summary> Константа Фи
+</summary>
+    </member>
+    <member name="F:ExtendedMath.ExtendedMath.Sqr2">
+      <summary> Константа корня из двух
+</summary>
+    </member>
+    <member name="F:ExtendedMath.ExtendedMath.SpeedOfLight">
+      <summary> Константа, равная скорости света (м/с)
+</summary>
+    </member>
+    <member name="F:ExtendedMath.ExtendedMath.SpeedOfSound">
+      <summary> Константа, равная скорости звука в сухом воздухе при темп. 20 градусов (м/с)
+</summary>
+    </member>
+    <member name="F:ExtendedMath.ExtendedMath.MinInt">
+      <summary> Минимальное значение типа integer
+</summary>
+    </member>
+    <member name="F:ExtendedMath.ExtendedMath.MaxBigInt">
+      <summary> Максимальное значение типа BigInteger
+</summary>
+    </member>
+    <member name="F:ExtendedMath.ExtendedMath.MinBigInt">
+      <summary> Минимальное значение типа BigInteger
+</summary>
+    </member>
+  </members>
+</doc>
