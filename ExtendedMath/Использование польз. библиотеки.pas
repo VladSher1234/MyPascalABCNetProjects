@@ -1,7 +1,6 @@
 ﻿uses ExtendedMath;
 
 begin  
-  var m := new Fraction(1, 2);
-  var m1 := new Fraction(1, 3);
-  print(m < m1);
+  var f := new MixNumber(1, new Fraction(2, 3));
+  (f ** 3).PrintM;
 end.

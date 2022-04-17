@@ -1,6 +1,7 @@
-﻿unit ExtendedMath;
+﻿/// Представляет расширенные математические функции
+unit ExtendedMath;
 
-uses School;
+uses School, PABCSystem, System.Numerics;
 
 // Условные обозначения:
 
@@ -19,82 +20,121 @@ uses School;
 //    ||Все с дробями||
 
 type
+  /// Тип натурального числа
+  Natural = class
+  private
+    /// Собственно число
+    nat: BigInteger;
+  public
+    constructor(n: BigInteger);
+    begin
+      if n <= 0 then
+        raise new System.Exception('Натуральное число не может быть равно или меньше нуля');
+      nat := n;
+    end;
+    
+    procedure Print;
+    begin
+      println(nat)
+    end;
+    
+    static function operator+(n, n1: Natural): Natural := new Natural(n.nat + n1.nat);
+    
+    static function operator-(n, n1: Natural): Natural := new Natural(n.nat - n1.nat);
+    
+    static function operator*(n, n1: Natural): Natural := new Natural(n.nat * n1.nat);
+    
+    static function operator div(n, n1: Natural): Natural := new Natural(n.nat div n1.nat);
+    
+    static function operator mod(n, n1: Natural): Natural := new Natural(n.nat mod n1.nat);
+    
+    static function operator=(n, n1: Natural): Boolean := n.nat = n1.nat;
+    
+    static function operator>(n, n1: Natural): Boolean := n.nat > n1.nat;
+    
+    static function operator<(n, n1: Natural): Boolean := n.nat < n1.nat;
+    
+    static function operator<=(n, n1: Natural): Boolean := n.nat <= n1.nat;
+    
+    static function operator>=(n, n1: Natural): Boolean := n.nat >= n1.nat;
+    
+    static function operator<>(n, n1: Natural): Boolean := n.nat <> n1.nat;
+  
+  end;
+
+type
   /// Тип обыкновенных дробей
-  Fraction = record
+  Fraction = class
+  private
     /// Числитель
-    num: integer;
+    num: Int64;
     /// Знаменатель
-    denom: integer;
-    constructor(n, d: integer);
+    denom: Int64;
+  public
+    constructor(n, d: Int64);
     begin
       if d = 0 then
         raise new System.Exception('Знаменатель дроби не может быть равен 0');
-      if (d < 0) then begin
+      if d < 0 then begin
         n *= -1;
         d *= -1;
       end;
-      var nod := School.НОД(n, d);
-      num := n div nod;
-      denom := d div nod;
+      num := n div НОД(n, d);
+      denom := d div НОД(n, d);
     end;
     /// Выводит дробь
-    procedure Print;
+    procedure PrintF;
     begin
       write(num);
       if (denom <> 1) then
         writeln('/', denom);
     end;
     
-    static function operator+(f, f1: Fraction): Fraction;
+    static function Power(val, exp: Integer): Int64;
     begin
-      var nok := School.НОК(f.denom, f1.denom);
-      Result := new Fraction(f.num * (nok div f1.denom) + f1.num * (nok div f.denom), nok)
+      Result := 1;
+      loop exp do
+        Result *= val
     end;
     
-    static function operator-(f, f1: Fraction): Fraction;
-    begin
-      var nok := School.НОК(f.denom, f1.denom);
-      Result := new Fraction(f.num * (nok div f1.denom) - f1.num * (nok div f.denom), nok)
-    end;
+    static function operator+(f, f1: Fraction): Fraction := new Fraction(f.num * (НОК(f.denom, f1.denom) div f1.denom) + f1.num * (НОК(f.denom, f1.denom) div f.denom), НОК(f.denom, f1.denom));
+    
+    static function operator-(f, f1: Fraction): Fraction := new Fraction(f.num * (НОК(f.denom, f1.denom) div f1.denom) - f1.num * (НОК(f.denom, f1.denom) div f.denom), НОК(f.denom, f1.denom));
     
     static function operator*(f, f1: Fraction): Fraction := new Fraction(f.num * f1.num, f.denom * f1.denom);
     
-    static function operator*(f: Fraction; i: integer): Fraction := new Fraction(f.num * i, f.denom);
+    static function operator*(f: Fraction; i: Integer): Fraction := new Fraction(f.num * i, f.denom);
+    
+    static function operator**(f: Fraction; i: Integer): Fraction := new Fraction(Power(f.num, i), Power(f.denom, i));
     
     static function operator/(f, f1: Fraction): Fraction := new Fraction(f.num * f1.denom, f.denom * f1.num);
     
-    static function operator/(f: Fraction; i: integer): Fraction := new Fraction(f.num, f.denom * i);
+    static function operator/(f: Fraction; i: Integer): Fraction := new Fraction(f.num, f.denom * i);
     
-    static function operator implicit(f: Fraction): real := f.num / f.denom;
+    static function operator implicit(f: Fraction): Real := f.num / f.denom;
     
-    static function operator=(f, f1: Fraction): boolean := (f.num = f1.num) and (f.denom = f1.denom);
-
-    static function operator>(f, f1: Fraction): boolean;
-    begin
-      var nok := School.НОК(f.denom, f1.denom);
-      Result := (f.num * (nok / f.denom) > f1.num * (nok / f1.denom))
-    end;
+    static function operator=(f, f1: Fraction): Boolean := (f.num = f1.num) and (f.denom = f1.denom);
     
-    static function operator<(f, f1: Fraction): boolean;
-    begin
-      var nok := School.НОК(f.denom, f1.denom);
-      Result := (f.num * (nok / f.denom) < f1.num * (nok / f1.denom))
-    end;
+    static function operator>(f, f1: Fraction): Boolean := (f.num * (НОК(f.denom, f1.denom) / f.denom) > f1.num * (НОК(f.denom, f1.denom) / f1.denom));
     
-    static function operator<>(f, f1: Fraction): boolean := not (f = f1);
+    static function operator<(f, f1: Fraction): Boolean := (f.num * (НОК(f.denom, f1.denom) / f.denom) < f1.num * (НОК(f.denom, f1.denom) / f1.denom));
     
+    static function operator<>(f, f1: Fraction): Boolean := not (f = f1);
+  
   end;
 
 //    ||Смешанные числа||
 
 type
   /// Тип смешанных чисел
-  MixNumber = record
+  MixNumber = class
+  private
     /// Целая часть
-    mix: integer;
+    mix: Int64;
     /// Дробная часть
     frac: Fraction;
-    constructor(m: integer; f: Fraction);
+  public
+    constructor(m: Int64; f: Fraction);
     begin
       if (f.num < 0) then begin
         m *= -1;
@@ -108,30 +148,32 @@ type
     begin
       if mix <> 0 then
         print(mix);
-      frac.Print
+      frac.PrintF
     end;
     
     /// Возвращает значение, равное смешанному числу, переведенное в обыкновенную дробь
     function ToFraction: Fraction := new Fraction(mix * frac.denom + frac.num, frac.denom);
     
-    static function operator+(m, m1: MixNumber): MixNumber:= new MixNumber(0, m.ToFraction + m1.ToFraction); 
-
-    static function operator-(m, m1: MixNumber): MixNumber:= new MixNumber(0, m.ToFraction - m1.ToFraction); 
-
-    static function operator*(m, m1: MixNumber): MixNumber:= new MixNumber(0, m.ToFraction * m1.ToFraction); 
+    static function operator+(m, m1: MixNumber): MixNumber := new MixNumber(0, m.ToFraction + m1.ToFraction); 
     
-    static function operator/(m, m1: MixNumber): MixNumber:= new MixNumber(0, m.ToFraction / m1.ToFraction); 
+    static function operator-(m, m1: MixNumber): MixNumber := new MixNumber(0, m.ToFraction - m1.ToFraction); 
     
-    static function operator implicit(m: MixNumber): real := m.mix + real(m.frac);
+    static function operator*(m, m1: MixNumber): MixNumber := new MixNumber(0, m.ToFraction * m1.ToFraction); 
     
-    static function operator=(m, m1: MixNumber): boolean := m.ToFraction = m1.ToFraction;
+    static function operator/(m, m1: MixNumber): MixNumber := new MixNumber(0, m.ToFraction / m1.ToFraction); 
     
-    static function operator>(m, m1: MixNumber): boolean := m.ToFraction > m1.ToFraction;
+    static function operator**(m: MixNumber; i: Integer): MixNumber := new MixNumber(0, m.ToFraction ** i);
     
-    static function operator<(m, m1: MixNumber): boolean := m.ToFraction < m1.ToFraction;
+    static function operator implicit(m: MixNumber): Real := m.mix + Real(m.frac);
     
-    static function operator<>(m, m1: MixNumber): boolean := not (m = m1);
-
+    static function operator=(m, m1: MixNumber): Boolean := m.ToFraction = m1.ToFraction;
+    
+    static function operator>(m, m1: MixNumber): Boolean := m.ToFraction > m1.ToFraction;
+    
+    static function operator<(m, m1: MixNumber): Boolean := m.ToFraction < m1.ToFraction;
+    
+    static function operator<>(m, m1: MixNumber): Boolean := not (m = m1);
+  
   end;
 
 //----------------------------------------------------------------------------
@@ -147,7 +189,7 @@ const
   SpeedOfLight = 299792458;
   /// Константа, равная скорости звука в сухом воздухе при темп. 20 градусов (м/с)
   SpeedOfSound = 343;
-  /// Минимальное значение типа integer
+  /// Минимальное значение типа Integer
   MinInt = Integer.MinValue;
   /// Максимальное значение типа BigInteger
   MaxBigInt = Real.PositiveInfinity;
@@ -159,32 +201,32 @@ const
 //----------------------------------------------------------------------------
 
 /// Возвращает значение 2 в степени a
-function PowerOfTwo(a: integer): real := 2 ** a;
+function PowerOfTwo(a: Integer): Real := 2 ** a;
 /// Возвращает значение 10 в степени a
-function PowerOfTen(a: integer): real := 10 ** a;
+function PowerOfTen(a: Integer): Real := 10 ** a;
 /// Возвращает значение прибавления чисел a и b
-function Add(a, b: integer): integer := a + b;
+function Add(a, b: Integer): Integer := a + b;
 /// Возвращает значение убавления чисел a и b
-function Substract(a, b: integer): integer := a - b;
+function Substract(a, b: Integer): Integer := a - b;
 /// Возвращает значение умножения чисел a и b
-function Multiple(a, b: integer): integer := a * b;
+function Multiple(a, b: Integer): Integer := a * b;
 /// Возвращает значение деления чисел a и b
-function Divide(a, b: integer): real := a / b;
+function Divide(a, b: Integer): Real := a / b;
 /// Возвращает значение квадрата a
-function Square(a: integer): real := a ** 2;
+function Square(a: Integer): Real := a ** 2;
 /// Возвращает значение куба a
-function Cube(a: integer): real := a ** 3;
+function Cube(a: Integer): Real := a ** 3;
 /// Возвращает значение деления чисел 1 на a
-function OneDivideByNumber(a: integer): real := 1 / a;
+function OneDivideByNumber(a: Integer): Real := 1 / a;
 /// Возвращает значение, равное a в степени a
-function Shepower(a: integer): biginteger;
+function Shepower(a: Integer): BigInteger;
 begin
   Result := 1;
   loop a do
     Result *= a
 end;
 /// Возвращает максимальное значение из a, b, c
-function Max3(a, b, c: integer): integer;
+function Max3(a, b, c: Integer): Integer;
 begin
   if (a > b) and (a > c) then Result := a;
   if (b > a) and (b > c) then Result := b;
@@ -198,7 +240,7 @@ end;
 //    ||Проверка с числом||
 
 /// Возвращает True, если число простое, иначе возвращает False
-function IsPrime(a: integer): boolean;
+function IsPrime(a: Integer): Boolean;
 begin
   if a < 2 then
     Result := False;
@@ -213,7 +255,7 @@ begin
   end
 end;
 /// Возвращает True, если число отрицательное, иначе возвращает False
-function IsNegative(a: integer): boolean;
+function IsNegative(a: Integer): Boolean;
 begin
   if a < 0 then
     Result := True
@@ -224,7 +266,7 @@ end;
 //    ||Проверка с дробью||
 
 /// Возвращает True, если дробь правильная, иначе возвращает False
-function FractionIsProper(f: Fraction): boolean;
+function FractionIsProper(f: Fraction): Boolean;
 begin
   if f.denom <= f.num then
     Result := False
@@ -239,35 +281,35 @@ end;
 //    ||Факториалы||
 
 /// Возвращает значение факториала a
-function Factorial(a: integer): biginteger;
+function Factorial(a: Integer): BigInteger;
 begin
   Result := 1;
   for var i := 1 to a do
-    Result := Result * i
+    Result *= i
 end;
 /// Возвращает значение суперфакториала a
-function Superfactorial(a: integer): biginteger;
+function Superfactorial(a: Integer): BigInteger;
 begin
   Result := 1;
   for var i := 1 to a do
-    Result := Result * Factorial(i)
+    Result *= Factorial(i)
 end;
 /// Возвращает значение нечетнориала a
-function Oddorial(a: integer): biginteger;
+function Oddorial(a: Integer): BigInteger;
 begin
   Result := 1;
   for var i := 1 to a step 2 do
-    Result := Result * i
+    Result *= i
 end;
 /// Возвращает значение четнориала a
-function Evenorial(a: integer): biginteger;
+function Evenorial(a: Integer): BigInteger;
 begin
   Result := 1;
   for var i := 2 to a step 2 do
-    Result := Result * i
+    Result *= i
 end;
 /// Возвращает значение праймориала a
-function Primorial(a: integer): biginteger;
+function Primorial(a: Integer): BigInteger;
 begin
   Result := 1;
   for var p := 1 to a do
@@ -282,48 +324,61 @@ end;
 
 //    ||Все остальное||
 
+/// Возвращает значение корня n-ной степени из a
+function NRoot(n: Integer; a: Real): Real;
+begin
+  if n = 0 then
+    raise new Exception('Нельзя найти нулевой корень');
+  if a = 0.0 then
+    NRoot := 0.0
+  else 
+  if a > 0.0 then
+    NRoot := Exp(Ln(a) / n)
+  else
+    NRoot := -Exp(Ln(-a) / n)
+end;
 /// Возвращает значение среднего арифметического из a и b
-function ArithmeticMean(a, b: integer): real := (a + b) / 2;
+function ArithmeticMean(a, b: Integer): Real := (a + b) / 2;
 /// Возвращает значение среднего арифметического из a, b и c
-function ArithmeticMean3(a, b, c: integer): real := (a + b + c) / 3;
+function ArithmeticMean3(a, b, c: Integer): Real := (a + b + c) / 3;
 /// Возвращает значение среднего арифметического из a, b, c и d
-function ArithmeticMean4(a, b, c, d: integer): real := (a + b + c + d) / 4;
+function ArithmeticMean4(a, b, c, d: Integer): Real := (a + b + c + d) / 4;
 /// Возвращает значение площади окружности
-function AreaOfCircle(r: real): real := Pi * r ** 2;
+function AreaOfCircle(r: Real): Real := Pi * r ** 2;
 /// Возвращает значение пути, равному скорость множить на время
-function S(V, t: real): real := V * t;
+function S(V, t: Real): Real := V * t;
 /// Возвращает значение скорости, равной пути делить на время
-function V(S, t: real): real := S / t;
+function V(S, t: Real): Real := S / t;
 /// Возвращает значение времени, равно пути делить на скорость
-function t(S, V: real): real := S / V;
+function t(S, V: Real): Real := S / V;
 /// Возвращает значение, равное длине окружности
-function Circumference(d: real): real := Pi * d;
+function Circumference(d: Real): Real := Pi * d;
 /// Возвращает значение, равное периметру прямоугольника
-function PerimeterOfRectangle(a, b: real): real := (a + b) * 2;
+function PerimeterOfRectangle(a, b: Real): Real := (a + b) * 2;
 /// Возвращает значение, равное периметру квадрата
-function PerimeterOfSquare(a: real): real := a * 4;
+function PerimeterOfSquare(a: Real): Real := a * 4;
 /// Возвращает значение, равное площади прямоугольника
-function AreaOfRectangle(a, b: real): real := a * b;
+function AreaOfRectangle(a, b: Real): Real := a * b;
 /// Возвращает значение, равное объему шара
-function VolumeOfBall(r: real): real := 4 / 3 * Pi * r ** 3;
+function VolumeOfBall(r: Real): Real := 4 / 3 * Pi * r ** 3;
 /// Возвращает значение, равное площади поверхности шара
-function AreaSurfaceOfBall(r: real): real := 4 * Pi * r ** 2;
+function AreaSurfaceOfBall(r: Real): Real := 4 * Pi * r ** 2;
 /// Возвращает значение, равное площади поверхности куба
-function AreaSurfaceOfCube(a: real): real := 6 * a ** 2;
+function AreaSurfaceOfCube(a: Real): Real := 6 * a ** 2;
 /// Возвращает значение, равное объему прямоуголного параллелепипеда
-function VolumeOfRectangularCuboid(a, b, c: real): real := a * b * c;
+function VolumeOfRectangularCuboid(a, b, c: Real): Real := a * b * c;
 /// Возвращает значение, равное площади поверхности прямоуголного параллелепипеда
-function SurfaceAreaOfRectangularCuboid(a, b, c: real): real := 2 * (a * b + b * c + a * c);
+function SurfaceAreaOfRectangularCuboid(a, b, c: Real): Real := 2 * (a * b + b * c + a * c);
 /// Возвращает значение, равное периметру поверхности прямоуголного параллелепипеда
-function PerimeterOfRectangularCuboid(a, b, c: real): real := 4 * (a + b + c);
+function PerimeterOfRectangularCuboid(a, b, c: Real): Real := 4 * (a + b + c);
 /// Возвращает значение, равное скорости против течения реки, зная скорость собственную и течения реки
-function VПрТеч(VСобств, VТечРеки: real): real := VСобств - VТечРеки;
+function VПрТеч(VСобств, VТечРеки: Real): Real := VСобств - VТечРеки;
 /// Возвращает значение, равное скорости по течения реки, зная скорость собственную и течения реки
-function VПоТеч(VСобств, VТечРеки: real): real := VСобств + VТечРеки;
+function VПоТеч(VСобств, VТечРеки: Real): Real := VСобств + VТечРеки;
 /// Возвращает значение, равное скорости собственной, зная скорость против и по течению реки
-function VСобств(VПрТеч, VПоТеч: real): real := (VПрТеч + VПоТеч) / 2;
+function VСобств(VПрТеч, VПоТеч: Real): Real := (VПрТеч + VПоТеч) / 2;
 /// Возвращает значение, равное скорости течения, зная скорость против и по течению реки
-function VТеч(VПрТеч, VПоТеч: real): real := (VПрТеч - VПоТеч) / 2;
+function VТеч(VПрТеч, VПоТеч: Real): Real := (VПрТеч - VПоТеч) / 2;
 
 //----------------------------------------------------------------------------
 //          Процедуры, выводящие последовательности
@@ -333,7 +388,7 @@ function VТеч(VПрТеч, VПоТеч: real): real := (VПрТеч - VПоТ
 
 // Не убирать всю эту хрень! Без нее ничего не работает! Граница начинается
 /// Что то делает
-function Iterate<T>(first, second, third: T; next: (T,T,T)->T): sequence of T;
+function Iterate<T>(first, second, third: T; next: (T,T,T)-> T): sequence of T;
 begin
   yield first;
   yield second;
@@ -348,38 +403,35 @@ begin
   end;
 end;
 /// Тоже что то делает
-function SeqWhile<T>(first, second, third: T; next: (T,T,T) ->T; pred: T->boolean): sequence of T;
-begin
-  Result := Iterate(first, second, third, next).TakeWhile(pred);
-end;
+function SeqWhile<T>(first, second, third: T; next: (T,T,T) -> T; pred: T-> Boolean): sequence of T := Iterate(first, second, third, next).TakeWhile(pred);
 // Граница заканчивается. Дальше все можете
 /// Выводит простейшую последовательность 1, 2, 3, 4... до n
-procedure SequenceOfPlus1(n: integer);
+procedure SequenceOfPlus1(n: Integer);
 begin
   SeqWhile(0, x -> x + 1, x -> x < n).Print;
 end;
 /// Выводит числа Фибонначи до n
-procedure SequenceOfFibonacci(n: integer);
+procedure SequenceOfFibonacci(n: Integer);
 begin
   SeqWhile(0, 1, (x, y) -> x + y, x -> x < n).Print;
 end;
 /// Выводит числа Люка до n
-procedure SequenceOfLucas(n: integer);
+procedure SequenceOfLucas(n: Integer);
 begin
   SeqWhile(2, 1, (x, y) -> x + y, x -> x < n).Print;
 end;
 /// Выводит числа трибоначчи до n
-procedure SequenceOfTribonacci(n: integer);
+procedure SequenceOfTribonacci(n: Integer);
 begin
   SeqWhile(0, 0, 1, (x, y, z) -> x + y + z, x -> x < n).Print;
 end;
 /// Выводит степени двойки до n
-procedure SequenceOfPower2(n: integer);
+procedure SequenceOfPower2(n: Integer);
 begin
   SeqWhile(1, x -> x * 2, x -> x < n).Print;
 end;
 /// Выводит степени десятки до n
-procedure SequenceOfPower10(n: integer);
+procedure SequenceOfPower10(n: Integer);
 begin
   SeqWhile(1, x -> x * 10, x -> x < n).Print;
 end;
@@ -387,7 +439,7 @@ end;
 //    ||Нерекурсивные последовательности||
 
 /// Выводит простые числа до n
-procedure SequenceOfPrimes(n: integer);
+procedure SequenceOfPrimes(n: Integer);
 begin
   for var p := 1 to n do
     for var i := 2 to Round(sqrt(p)) do
@@ -398,7 +450,7 @@ begin
     end;
 end;
 /// Выводит числа Мерсенна до n
-procedure SequenceOfMersenne(n: integer);
+procedure SequenceOfMersenne(n: Integer);
 begin
   for var i := 1 to n do
   begin
@@ -407,7 +459,7 @@ begin
   end
 end;
 /// Выводит числа Вудала до n
-procedure SequenceOfWoodall(n: integer);
+procedure SequenceOfWoodall(n: Integer);
 begin
   for var i := 1 to n do
   begin
@@ -416,7 +468,7 @@ begin
   end
 end;
 /// Выводит числа Ферма до n
-procedure SequenceOfFermat(n: integer);
+procedure SequenceOfFermat(n: Integer);
 begin
   for var i := 1 to n do
   begin
@@ -425,7 +477,7 @@ begin
   end
 end;
 /// Выводит последовательность n * n до n
-procedure SequenceOfNTimesN(n: integer);
+procedure SequenceOfNTimesN(n: Integer);
 begin
   for var i := 1 to n do
   begin
